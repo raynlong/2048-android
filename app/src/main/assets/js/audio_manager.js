@@ -72,7 +72,7 @@ AudioManager.prototype.playMerge = function (value) {
   osc.frequency.setValueAtTime(baseFreq, now);
   osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.06);
   osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, now + 0.1);
-  gain.gain.setValueAtTime(0.25, now);
+  gain.gain.setValueAtTime(0.5, now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
   osc.connect(gain);
   gain.connect(ctx.destination);
@@ -84,7 +84,7 @@ AudioManager.prototype.playMerge = function (value) {
   var gain2 = ctx.createGain();
   osc2.type = 'sine';
   osc2.frequency.setValueAtTime(baseFreq * 2, now + 0.02);
-  gain2.gain.setValueAtTime(0.1, now + 0.02);
+  gain2.gain.setValueAtTime(0.2, now + 0.02);
   gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
   osc2.connect(gain2);
   gain2.connect(ctx.destination);
@@ -106,7 +106,7 @@ AudioManager.prototype.playMove = function () {
   osc.frequency.setValueAtTime(180, now);
   osc.frequency.exponentialRampToValueAtTime(280, now + 0.03);
   osc.frequency.exponentialRampToValueAtTime(120, now + 0.07);
-  gain.gain.setValueAtTime(0.1, now);
+  gain.gain.setValueAtTime(0.2, now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
   osc.connect(gain);
   gain.connect(ctx.destination);
