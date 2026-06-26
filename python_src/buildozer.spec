@@ -13,10 +13,7 @@ package.domain = com.game
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf
-
-# (list) List of inclusions using pattern matching
-source.include_patterns = src/*.py
+source.include_exts = py,png,jpg,kv,atlas
 
 # (list) Source files to exclude (let empty to not exclude anything)
 source.exclude_exts = spec
@@ -36,11 +33,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.3.1
-
-# p4a settings for reliability
-p4a.branch = develop
-p4a.ndk_version = 26d
+requirements = python3,kivy==2.3.0
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait
@@ -70,8 +63,7 @@ android.minapi = 23
 android.sdk = 33
 
 # (int) Android NDK version to use
-# Using p4a.ndk_version above instead; comment out android.ndk
-# android.ndk = 25b
+android.ndk = 25b
 
 # (int) Android SDK tools version
 # android.sdk_tools = 26.1.1
@@ -181,7 +173,7 @@ android.entrypoint = org.kivy.android.PythonActivity
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
-log_level = 1
+log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
