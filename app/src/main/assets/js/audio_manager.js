@@ -1,19 +1,55 @@
 function AudioManager() {
   this.ctx = null;
   this.enabled = true;
+  this._initialized = false;
 }
 
-// Lazy-init AudioContext (needed for mobile autoplay policy)
-AudioManager.prototype._getCtx = function () {
-  if (!this.ctx) {
-    var AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) {
-      this.ctx = new AudioCtx();
-    }
+// One-time init triggered by first user touch
+AudioManager.prototype._boot = function () {
+  if (this._initialized) return;
+  this._initialized = true;
+  var AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+  try {
+    this.ctx = new AudioCtx();
+  } catch (e) {
+    return;
   }
-  // Resume if suspended (mobile browsers)
-  if (this.ctx && this.ctx.state === 'suspended') {
-    this.ctx.resume();
+  // Resume on Android WebView — must happen inside user gesture
+  if (this.ctx.state === 'suspended') {
+    var self = this;
+    this.ctx.resume().then(function () {
+      // Play a silent buffer to fully unlock audio
+      var buf = self.ctx.createBuffer(1, 1, 22050);
+      var src = self.ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(self.ctx.destination);
+      src.start(0);
+    }).catch(function () {});
+  }
+};
+
+// Try to lock audio on first user interaction (touch / click)
+// Listens on both document & game-container for reliability
+AudioManager.prototype._lock = function () {
+  var self = this;
+  var handler = function () {
+    self._boot();
+    document.removeEventListener('touchstart', handler, true);
+    document.removeEventListener('mousedown', handler, true);
+  };
+  // Use capture phase so it fires even if gameContainer calls preventDefault
+  document.addEventListener('touchstart', handler, true);
+  document.addEventListener('mousedown', handler, true);
+};
+
+// Get audio context — safe to call any time
+AudioManager.prototype._getCtx = function () {
+  if (!this._initialized) return null;
+  if (!this.ctx) return null;
+  if (this.ctx.state === 'suspended') {
+    this.ctx.resume().catch(function () {});
+    return null; // still suspended, skip this frame
   }
   return this.ctx;
 };
@@ -78,5 +114,38 @@ AudioManager.prototype.playMove = function () {
   osc.stop(now + 0.1);
 };
 
-// Singleton
+// Singleton — auto-lock on first touch
 window.audioManager = new AudioManager();
+window.audioManager._lock();
+
+// Sound toggle: read from localStorage, wire the button
+(function () {
+  var saved = localStorage.getItem('2048-sound');
+  if (saved === 'off') {
+    window.audioManager.enabled = false;
+  }
+  function syncUI() {
+    var btn = document.getElementById('sound-toggle');
+    if (btn) {
+      btn.textContent = window.audioManager.enabled ? '🔊' : '🔇';
+    }
+  }
+  // Wait for DOM
+  document.addEventListener('DOMContentLoaded', function () {
+    syncUI();
+    var btn = document.getElementById('sound-toggle');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        window.audioManager.enabled = !window.audioManager.enabled;
+        localStorage.setItem('2048-sound', window.audioManager.enabled ? 'on' : 'off');
+        syncUI();
+      });
+      btn.addEventListener('touchend', function (e) {
+        e.preventDefault();
+        window.audioManager.enabled = !window.audioManager.enabled;
+        localStorage.setItem('2048-sound', window.audioManager.enabled ? 'on' : 'off');
+        syncUI();
+      });
+    }
+  });
+})();
