@@ -182,6 +182,11 @@ GameManager.prototype.move = function (direction) {
   if (moved) {
     this.addRandomTile();
 
+    // Slide sound effect on every successful move
+    if (window.audioManager) {
+      window.audioManager.playMove();
+    }
+
     if (!this.movesAvailable()) {
       this.over = true; // Game over!
     }

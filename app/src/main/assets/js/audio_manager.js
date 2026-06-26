@@ -56,22 +56,26 @@ AudioManager.prototype.playMerge = function (value) {
   osc2.stop(now + 0.18);
 };
 
-// A subtle move tick — not yet wired, available for future use
+// A crisp slide tick — quick, satisfying feedback
 AudioManager.prototype.playMove = function () {
   if (!this.enabled) return;
   var ctx = this._getCtx();
   if (!ctx) return;
   var now = ctx.currentTime;
+
+  // Brief low-frequency thump
   var osc = ctx.createOscillator();
   var gain = ctx.createGain();
   osc.type = 'sine';
-  osc.frequency.setValueAtTime(200, now);
-  gain.gain.setValueAtTime(0.06, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+  osc.frequency.setValueAtTime(180, now);
+  osc.frequency.exponentialRampToValueAtTime(280, now + 0.03);
+  osc.frequency.exponentialRampToValueAtTime(120, now + 0.07);
+  gain.gain.setValueAtTime(0.1, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
   osc.connect(gain);
   gain.connect(ctx.destination);
   osc.start(now);
-  osc.stop(now + 0.06);
+  osc.stop(now + 0.1);
 };
 
 // Singleton
