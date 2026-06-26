@@ -26,6 +26,10 @@ class GameManager:
         self.keep_playing = False
         self.moved_this_turn = False
 
+        # Sound callbacks — set by the app layer
+        self.on_move = None   # callable()
+        self.on_merge = None  # callable(value)
+
         if previous_state:
             self._load_state(previous_state)
         else:
@@ -71,6 +75,10 @@ class GameManager:
             self.moved_this_turn = True
             self._add_random_tile()
 
+            # Sound callbacks
+            if self.on_move:
+                self.on_move()
+
             if not self._moves_available():
                 self.over = True
 
@@ -115,6 +123,10 @@ class GameManager:
                     self.score += merged_value
                     if merged_value >= WIN_VALUE and not self.won:
                         self.won = True
+
+                    # Merge sound callback
+                    if self.on_merge:
+                        self.on_merge(merged_value)
 
                     moved = True
 
@@ -219,6 +231,7 @@ class GameManager:
         self.moved_this_turn = False
         self.grid = Grid(self.size)
         self._add_start_tiles()
+        # Callback references preserved (set by app layer and not game state)
 
     def keep_playing_action(self):
         """Continue playing after reaching 2048."""

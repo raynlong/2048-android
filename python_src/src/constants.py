@@ -59,3 +59,6 @@ GAME_STATE_KEY = "game_state"
 SLIDE_SPEED = 8       # pixels per frame for slide animation
 ANIM_FRAMES = 15      # frames for appear/pop animations
 FPS = 60
+
+# Layout — board bottom margin for one-hand use (in dp)
+BOARD_BOTTOM_MARGIN = 48
