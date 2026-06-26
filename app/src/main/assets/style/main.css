@@ -800,8 +800,9 @@ hr {
     background: rgba(0, 0, 0, 0.08); }
 
 /* ===== 暗色模式全局样式 ===== */
+html.dark-mode,
 body.dark-mode {
-  background: #1a1a2e;
+  background: #1a1a2e !important;
   color: #c9c0b3; }
 
 body.dark-mode h1.title {
@@ -816,19 +817,29 @@ body.dark-mode .best-container:after {
   color: #9a9090; }
 
 body.dark-mode .game-container {
-  background: #6e6358; }
+  background: #4a4240; }
 
 body.dark-mode .grid-cell {
-  background: rgba(20, 20, 40, 0.35); }
+  background: rgba(20, 20, 40, 0.4); }
 
+/* 低值 tile — 浅底+深字 */
 body.dark-mode .tile.tile-2 .tile-inner {
-  background: #c8bfb0; }
+  background: #b8b0a4;
+  color: #2a2420; }
 
 body.dark-mode .tile.tile-4 .tile-inner {
-  background: #bbb0a0; }
+  background: #a89e90;
+  color: #2a2420; }
+
+/* 中值 tile — 保持橙系但字色确保可读 */
+body.dark-mode .tile.tile-8 .tile-inner { color: #fff; }
+body.dark-mode .tile.tile-16 .tile-inner { color: #fff; }
+body.dark-mode .tile.tile-32 .tile-inner { color: #fff; }
+body.dark-mode .tile.tile-64 .tile-inner { color: #fff; }
 
 body.dark-mode .restart-button {
-  background: #5a4f45; }
+  background: #5a4f45;
+  color: #f9f6f2; }
 
 body.dark-mode .game-intro {
   color: #9a9090; }
@@ -838,10 +849,10 @@ body.dark-mode .dark-toggle svg {
   stroke: #c9c0b3; }
 
 body.dark-mode .game-message {
-  background: rgba(30, 30, 50, 0.7) !important; }
+  background: rgba(30, 30, 50, 0.75) !important; }
 
 body.dark-mode .game-message.game-won {
-  background: rgba(180, 140, 20, 0.7) !important; }
+  background: rgba(180, 140, 20, 0.75) !important; }
 
 @media screen and (max-width: 520px) {
   .dark-toggle {

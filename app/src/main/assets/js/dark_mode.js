@@ -8,9 +8,12 @@
 
   function applyDark(dark) {
     isDark = dark;
+    // 同时给 html 和 body 加类，确保全屏覆盖
     if (dark) {
+      document.documentElement.classList.add('dark-mode');
       document.body.classList.add('dark-mode');
     } else {
+      document.documentElement.classList.remove('dark-mode');
       document.body.classList.remove('dark-mode');
     }
     var btn = document.getElementById('dark-toggle');
@@ -20,9 +23,10 @@
     localStorage.setItem('2048-dark', dark ? 'on' : 'off');
   }
 
-  // 尽早应用，防止闪白
+  // 尽早应用：在 DOMContentLoaded 之前就设置 html 背景，防止闪白
   if (isDark) {
     document.documentElement.style.background = '#1a1a2e';
+    document.documentElement.classList.add('dark-mode');
   }
 
   document.addEventListener('DOMContentLoaded', function () {
