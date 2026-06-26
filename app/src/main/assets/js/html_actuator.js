@@ -74,6 +74,11 @@ HTMLActuator.prototype.addTile = function (tile) {
     classes.push("tile-merged");
     this.applyClasses(wrapper, classes);
 
+    // Play merge sound effect
+    if (window.audioManager) {
+      window.audioManager.playMerge(tile.value);
+    }
+
     // Render the tiles that merged
     tile.mergedFrom.forEach(function (merged) {
       self.addTile(merged);
