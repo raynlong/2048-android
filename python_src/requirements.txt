@@ -4,3 +4,4 @@ kivy>=2.3.0
 # Android build (handled by buildozer, not installed directly)
 # python-for-android
 # Cython
+# trigger rebuild
