@@ -100,3 +100,4 @@ class Game2048App(App):
 
 if __name__ == "__main__":
     Game2048App().run()
+

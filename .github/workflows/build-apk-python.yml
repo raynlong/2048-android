@@ -58,9 +58,9 @@ jobs:
           path: |
             ~/.buildozer
             python_src/.buildozer
-          key: buildozer-v5-${{ hashFiles('python_src/buildozer.spec') }}
+          key: buildozer-v6-${{ hashFiles('python_src/buildozer.spec', 'python_src/main.py', 'python_src/src/ui.py', 'python_src/src/audio_manager.py', 'python_src/src/dark_mode.py') }}
           restore-keys: |
-            buildozer-v5-
+            buildozer-v6-
 
       - name: Install Buildozer
         run: |
@@ -84,7 +84,13 @@ jobs:
         run: |
           unset ANDROID_HOME ANDROID_SDK_ROOT ANDROID_NDK ANDROID_NDK_HOME ANDROID_NDK_ROOT
           unset ANDROID_NDK_LATEST_HOME
+          buildozer android clean 2>&1 || true
           buildozer android debug 2>&1 | tee build.log
+          echo "=== Build exit code: $? ==="
+          echo "=== Checking for APK ==="
+          find . -name "*.apk" -type f 2>/dev/null || echo "NO APK FOUND"
+          echo "=== .buildozer dists structure ==="
+          find .buildozer/android/platform -name "*.apk" -o -name "dists" -type d 2>/dev/null | head -20
         timeout-minutes: 90
 
       - name: Locate and copy APK
@@ -94,20 +100,22 @@ jobs:
           APKS=$(find . -name "*.apk" -type f 2>/dev/null)
           if [ -z "$APKS" ]; then
             echo "ERROR: No .apk file found anywhere!"
-            echo "=== Dumping .buildozer structure ==="
-            find python_src/.buildozer -type d 2>/dev/null | head -40
+            echo "=== Full .buildozer tree ==="
+            find python_src/.buildozer -maxdepth 5 -type d 2>/dev/null | head -50
             exit 1
           fi
           echo "Found APKs:"
           echo "$APKS"
-          echo "=== Copying to python_src/bin/ ==="
           mkdir -p python_src/bin
-          cp $APKS python_src/bin/
+          for apk in $APKS; do
+            cp "$apk" python_src/bin/
+          done
+          echo "=== bin/ contents ==="
           ls -la python_src/bin/
 
-      - name: Upload build log on failure
-        if: failure()
+      - name: Upload build log (always)
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: buildozer-build-log
           path: python_src/build.log
