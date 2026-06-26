@@ -13,3 +13,6 @@ app/release
 *.aab
 *.jks
 *.keystore
+
+# Python game source (desktop only)
+python_src/__pycache__/

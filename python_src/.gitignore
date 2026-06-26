@@ -1,0 +1,33 @@
+# Buildozer
+.buildozer/
+bin/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+*.spec
+!buildozer.spec
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Game saves
+2048_save.json
+
+# Kivy logs
+.kivy/
