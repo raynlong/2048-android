@@ -62,7 +62,9 @@ h1.title {
   border-radius: 3px;
   color: white;
   margin-top: 8px;
-  text-align: center; }
+  text-align: center;
+  /* 预留5位数宽度，避免分数增加时容器撑大导致布局跳变 */
+  min-width: 3.5em; }
   .score-container:after, .best-container:after {
     position: absolute;
     width: 100%;
@@ -569,7 +571,8 @@ hr {
   .score-container, .best-container {
     margin-top: 0;
     padding: 15px 10px;
-    min-width: 40px; }
+    /* 预留5位数宽度，移动端约3em */
+    min-width: 3em; }
 
   .heading {
     margin-bottom: 10px; }
@@ -778,3 +781,70 @@ hr {
     margin-top: 90px !important; }
   .game-message .lower {
     margin-top: 30px !important; } }
+
+/* ===== 暗色模式按钮 ===== */
+.dark-toggle {
+  display: inline-block;
+  vertical-align: middle;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  margin-right: 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+  line-height: 1;
+  -webkit-appearance: none;
+  outline: none; }
+  .dark-toggle:active {
+    background: rgba(0, 0, 0, 0.08); }
+
+/* ===== 暗色模式全局样式 ===== */
+body.dark-mode {
+  background: #1a1a2e;
+  color: #c9c0b3; }
+
+body.dark-mode h1.title {
+  color: #f9f6f2; }
+
+body.dark-mode .score-container,
+body.dark-mode .best-container {
+  background: #3a3a4a; }
+
+body.dark-mode .score-container:after,
+body.dark-mode .best-container:after {
+  color: #9a9090; }
+
+body.dark-mode .game-container {
+  background: #6e6358; }
+
+body.dark-mode .grid-cell {
+  background: rgba(20, 20, 40, 0.35); }
+
+body.dark-mode .tile.tile-2 .tile-inner {
+  background: #c8bfb0; }
+
+body.dark-mode .tile.tile-4 .tile-inner {
+  background: #bbb0a0; }
+
+body.dark-mode .restart-button {
+  background: #5a4f45; }
+
+body.dark-mode .game-intro {
+  color: #9a9090; }
+
+body.dark-mode .sound-toggle svg,
+body.dark-mode .dark-toggle svg {
+  stroke: #c9c0b3; }
+
+body.dark-mode .game-message {
+  background: rgba(30, 30, 50, 0.7) !important; }
+
+body.dark-mode .game-message.game-won {
+  background: rgba(180, 140, 20, 0.7) !important; }
+
+@media screen and (max-width: 520px) {
+  .dark-toggle {
+    margin-top: 0;
+    margin-right: 2px;
+    padding: 2px 4px; } }
