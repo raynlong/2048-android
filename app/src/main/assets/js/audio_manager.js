@@ -43,13 +43,13 @@ AudioManager.prototype._lock = function () {
   document.addEventListener('mousedown', handler, true);
 };
 
-// Get audio context — safe to call any time
+// Get audio context — always returns ctx if possible, queues audio when suspended
 AudioManager.prototype._getCtx = function () {
-  if (!this._initialized) return null;
+  if (!this._initialized) this._boot();
   if (!this.ctx) return null;
-  if (this.ctx.state === 'suspended') {
+  if (this.ctx.state !== 'running') {
     this.ctx.resume().catch(function () {});
-    return null; // still suspended, skip this frame
+    // Return ctx anyway — audio nodes queue until context is running
   }
   return this.ctx;
 };
