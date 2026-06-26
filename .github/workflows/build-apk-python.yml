@@ -87,15 +87,23 @@ jobs:
           buildozer android debug 2>&1 | tee build.log
         timeout-minutes: 90
 
-      - name: Locate APK
+      - name: Locate and copy APK
         if: success()
         run: |
-          echo "=== Searching for .apk files ==="
-          find . -name "*.apk" -type f 2>/dev/null || echo "No .apk found with find"
-          echo "=== Listing python_src/bin/ ==="
-          ls -la python_src/bin/ 2>/dev/null || echo "python_src/bin/ does not exist"
-          echo "=== Listing python_src/.buildozer/ ==="
-          ls python_src/.buildozer/ 2>/dev/null || echo "no .buildozer"
+          echo "=== Searching for .apk files recursively ==="
+          APKS=$(find . -name "*.apk" -type f 2>/dev/null)
+          if [ -z "$APKS" ]; then
+            echo "ERROR: No .apk file found anywhere!"
+            echo "=== Dumping .buildozer structure ==="
+            find python_src/.buildozer -type d 2>/dev/null | head -40
+            exit 1
+          fi
+          echo "Found APKs:"
+          echo "$APKS"
+          echo "=== Copying to python_src/bin/ ==="
+          mkdir -p python_src/bin
+          cp $APKS python_src/bin/
+          ls -la python_src/bin/
 
       - name: Upload build log on failure
         if: failure()
@@ -110,7 +118,6 @@ jobs:
         if: success()
         with:
           name: 2048-python-debug
-          path: |
-            python_src/bin/*.apk
-            python_src/bin/**/*.apk
+          path: python_src/bin/*.apk
+          if-no-files-found: error
           retention-days: 30
