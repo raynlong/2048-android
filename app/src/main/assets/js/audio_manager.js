@@ -15,17 +15,18 @@ AudioManager.prototype._boot = function () {
   } catch (e) {
     return;
   }
-  // Resume on Android WebView — must happen inside user gesture
-  if (this.ctx.state === 'suspended') {
-    var self = this;
-    this.ctx.resume().then(function () {
-      // Play a silent buffer to fully unlock audio
-      var buf = self.ctx.createBuffer(1, 1, 22050);
-      var src = self.ctx.createBufferSource();
-      src.buffer = buf;
-      src.connect(self.ctx.destination);
-      src.start(0);
-    }).catch(function () {});
+  // Force-unlock: playing a silent buffer inside the user gesture
+  // synchronously transitions the context from 'suspended' to 'running'
+  try {
+    var buf = this.ctx.createBuffer(1, 1, 22050);
+    var src = this.ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(this.ctx.destination);
+    src.start(0);
+  } catch (e) {}
+  // Fallback: explicitly resume in case the above didn't work
+  if (this.ctx.state !== 'running') {
+    this.ctx.resume().catch(function () {});
   }
 };
 
